@@ -1,0 +1,23 @@
+C4Container
+    title Container Diagram — techschool-web
+
+    Person(dev, "Developer")
+    Person(visitor, "Visitor")
+
+    System_Boundary(project, "techschool-web Monorepo") {
+        Container(src, "Astro Source", "Astro + TypeScript", "Pages, layouts, components, scripts, styles, and static data")
+        Container(build, "Build Output /dist", "Static HTML/CSS/JS", "Optimised, compressed output produced by astro build")
+        Container(toolchain, "Dev Toolchain", "Node.js / pnpm scripts", "ESLint, ls-lint, commitlint, lint-staged, simple-git-hooks — enforces code quality on every commit")
+        Container(config, "Project Config", "astro.config.mjs, tsconfig.json, .npmrc", "Wires together integrations, path aliases, compiler options, and registry settings")
+    }
+
+    System_Ext(cdn, "CDN / Hosting")
+    System_Ext(github, "GitHub")
+
+    Rel(dev, src, "Writes components, pages, styles")
+    Rel(dev, toolchain, "Triggers via git hooks and pnpm scripts")
+    Rel(src, config, "Reads aliases and Astro integrations at build time")
+    Rel(src, build, "astro build compiles to static files")
+    Rel(build, cdn, "Deployed and served")
+    Rel(visitor, cdn, "Requests pages and assets")
+    Rel(toolchain, github, "Enforces commit message convention before push")

@@ -1,0 +1,34 @@
+# C4 Level 4 — Code (Config & Toolchain wiring)
+
+```mermaid
+C4Component
+    title Code-level Diagram — Configuration & Toolchain
+
+    Container_Boundary(cfg, "Configuration Files") {
+        Component(astrocfg, "astro.config.mjs", "Astro config", "Registers integrations: sitemap, compressor, icon, seo-schema. Sets LightningCSS as CSS transformer.")
+        Component(tscfg, "tsconfig.json", "TypeScript config", "Extends astro/tsconfigs/strict. Defines path aliases: @components, @ui, @layouts, @scripts, @styles, @data, @contracts, @struct, @images.")
+        Component(npmrc, ".npmrc", "pnpm config", "Sets registry and any pnpm-specific options.")
+        Component(pkgjson, "package.json", "Project manifest", "Declares scripts (dev, build, preview, lint:fix), git hooks config via simple-git-hooks, and lint-staged file patterns.")
+    }
+
+    Container_Boundary(tools, "Toolchain Files") {
+        Component(eslint, "eslint.config.js", "ESLint flat config", "Chains: neostandard, @stylistic, import-x, perfectionist, astro, jsonc, yml, package-json parsers and rules.")
+        Component(lslint, ".ls-lint.yml", "ls-lint config", "Enforces kebab-case for JS/TS/CSS/media files. Enforces PascalCase for .astro components and layouts. kebab-case for pages.")
+        Component(commitlint, "commitlint.config.js", "commitlint config", "Extends @commitlint/config-conventional — enforces Conventional Commits on every commit message.")
+    }
+
+    Container_Boundary(hooks, "Git Hooks (simple-git-hooks)") {
+        Component(precommit, "pre-commit hook", "shell", "Runs lint-staged (ESLint --fix on staged files) then ls-lint (file naming check).")
+        Component(commitmsg, "commit-msg hook", "shell", "Runs commitlint to validate commit message format.")
+    }
+
+    Rel(pkgjson, eslint, "lint:fix script invokes ESLint")
+    Rel(pkgjson, precommit, "simple-git-hooks registers pre-commit")
+    Rel(pkgjson, commitmsg, "simple-git-hooks registers commit-msg")
+    Rel(precommit, eslint, "lint-staged calls ESLint")
+    Rel(precommit, lslint, "ls-lint validates file names")
+    Rel(commitmsg, commitlint, "validates message against conventional commits")
+    Rel(astrocfg, tscfg, "Astro reads tsconfig for path resolution")
+    Rel(tscfg, eslint, "ESLint uses typescript-eslint parser with tsconfig")
+    Rel(npmrc, pkgjson, "pnpm reads registry settings before install")
+```

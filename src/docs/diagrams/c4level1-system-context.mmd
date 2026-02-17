@@ -1,0 +1,17 @@
+C4Context
+    title System Context — techschool-web
+
+    Person(visitor, "Visitor", "User browsing the TechSchool website")
+    Person(dev, "Developer", "Team member maintaining the codebase")
+
+    System(techschool, "techschool-web", "Official TechSchool website built with Astro. Serves static HTML/CSS/JS with SEO, sitemaps, and compressed assets.")
+
+    System_Ext(browser, "Web Browser", "Chrome, Firefox, Safari, etc.")
+    System_Ext(github, "GitHub", "Source control, issue tracking\ngithub.com/UXCorpRangel/techschool-web")
+    System_Ext(cdn, "CDN / Hosting", "Serves the built static site to end users")
+
+    Rel(visitor, browser, "Visits the site")
+    Rel(browser, cdn, "Fetches static assets")
+    Rel(cdn, techschool, "Hosts built output")
+    Rel(dev, github, "Push commits, open PRs")
+    Rel(github, techschool, "CI/CD triggers build pipeline")

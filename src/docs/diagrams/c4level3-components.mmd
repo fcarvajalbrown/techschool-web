@@ -1,0 +1,32 @@
+# C4 Level 3 — Component
+
+```mermaid
+C4Component
+    title Component Diagram — Astro Source
+
+    Container_Boundary(src, "src/") {
+        Component(pages, "src/pages/", "Astro pages (kebab-case)", "File-system routes. Each .astro file becomes an HTML page.")
+        Component(layouts, "src/layouts/", "Astro layouts (PascalCase)", "Shared page shells — wrap pages with common head, header, footer.")
+        Component(components, "src/components/", "Astro components (PascalCase)", "Feature components consumed by pages and layouts.")
+        Component(ui, "src/components/ui/", "UI primitives (PascalCase)", "Reusable low-level Astro components: buttons, cards, etc.")
+        Component(struct, "src/components/struct/", "Structural components (PascalCase)", "Higher-order layout blocks: sections, grids.")
+        Component(scripts, "src/scripts/", "Client-side TS (kebab-case)", "Browser JS hydrated by Astro. Uses Embla Carousel.")
+        Component(styles, "src/styles/", "CSS (kebab-case)", "Global styles. LightningCSS processes them at build time.")
+        Component(data, "src/data/", "TS data files (kebab-case)", "Static content/config consumed at build time.")
+        Component(contracts, "src/contracts/", "TS types (kebab-case)", "Shared TypeScript interfaces and type contracts.")
+        Component(images, "src/images/", "Images (kebab-case)", "Source images processed by Sharp via astro:assets.")
+    }
+
+    Rel(pages, layouts, "Extends / wraps via slot")
+    Rel(pages, components, "Imports feature components")
+    Rel(layouts, components, "Imports structural components")
+    Rel(components, ui, "Composes UI primitives")
+    Rel(components, struct, "Uses structural blocks")
+    Rel(components, scripts, "Client:load / client:idle scripts")
+    Rel(components, styles, "Imports global and scoped CSS")
+    Rel(pages, data, "Imports static data at build time")
+    Rel(components, data, "Reads data for rendering")
+    Rel(contracts, data, "Types consumed by data files")
+    Rel(contracts, components, "Types imported for props")
+    Rel(components, images, "Via astro:assets with Sharp optimisation")
+```
