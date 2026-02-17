@@ -1,17 +1,30 @@
-C4Context
-    title System Context — techschool-web
+# C4 Level 1 — System Context
 
-    Person(visitor, "Visitor", "User browsing the TechSchool website")
-    Person(dev, "Developer", "Team member maintaining the codebase")
+```mermaid
+flowchart TD
+    DEV["👤 **Developer**\n──────────────\nTeam member at UXCorpRangel\nWrites code, reviews PRs,\nmanages releases"]
 
-    System(techschool, "techschool-web", "Official TechSchool website built with Astro. Serves static HTML/CSS/JS with SEO, sitemaps, and compressed assets.")
+    VISITOR["👤 **Visitor**\n──────────────\nEnd user browsing techschool.dev\nvia any modern browser"]
 
-    System_Ext(browser, "Web Browser", "Chrome, Firefox, Safari, etc.")
-    System_Ext(github, "GitHub", "Source control, issue tracking\ngithub.com/UXCorpRangel/techschool-web")
-    System_Ext(cdn, "CDN / Hosting", "Serves the built static site to end users")
+    GH["⬜ **GitHub**\n──────────────\n« external system »\ngithub.com/UXCorpRangel/techschool-web\nSource control · PR reviews\nIssue tracking · CI/CD trigger"]
 
-    Rel(visitor, browser, "Visits the site")
-    Rel(browser, cdn, "Fetches static assets")
-    Rel(cdn, techschool, "Hosts built output")
-    Rel(dev, github, "Push commits, open PRs")
-    Rel(github, techschool, "CI/CD triggers build pipeline")
+    SYS["🔷 **techschool-web**\n──────────────\n« system »\nOfficial TechSchool website\nBuilt with Astro 5 + TypeScript\nOutputs fully static HTML/CSS/JS\nSEO · Sitemap · Compressed assets"]
+
+    CDN["⬜ **CDN / Hosting**\n──────────────\n« external system »\nServes pre-built static files\nglobally with low latency"]
+
+    BROWSER["⬜ **Web Browser**\n──────────────\n« external system »\nChrome · Firefox · Safari · Edge\nRenders HTML, executes client JS"]
+
+    DEV -->|"① Push commits & open PRs"| GH
+    GH -->|"② CI/CD triggers astro build\nand deploys /dist output"| SYS
+    SYS -->|"③ Built static files\ncopied to CDN origin"| CDN
+    VISITOR -->|"④ Opens browser,\nnavigates to techschool.dev"| BROWSER
+    BROWSER -->|"⑤ Fetch HTML / CSS / JS\nassets over HTTPS"| CDN
+    CDN -->|"⑥ Serve cached\nstatic response"| BROWSER
+
+    style DEV fill:#1168BD,color:#fff,stroke:#0e56a0
+    style VISITOR fill:#1168BD,color:#fff,stroke:#0e56a0
+    style SYS fill:#1168BD,color:#fff,stroke:#0e56a0
+    style GH fill:#6b6b6b,color:#fff,stroke:#444
+    style CDN fill:#6b6b6b,color:#fff,stroke:#444
+    style BROWSER fill:#6b6b6b,color:#fff,stroke:#444
+```
