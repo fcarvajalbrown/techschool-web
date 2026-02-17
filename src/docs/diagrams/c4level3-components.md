@@ -1,41 +1,32 @@
 ```mermaid
 flowchart TD
-    subgraph SRC["🟦 Astro Source — src/"]
-        CONTRACTS["📐 **src/contracts/**\n« TypeScript interfaces »\nShared type definitions\nand prop contracts used\nacross the entire codebase"]
-
-        DATA["🗄️ **src/data/**\n« TS data files · kebab-case »\nStatic content consumed at build time\nNo runtime DB needed\nExamples: course lists, team info,\npage copy, navigation config"]
-
-        IMAGES["🖼️ **src/images/**\n« kebab-case »\nSource images processed by Sharp\nvia astro:assets\nOutput: WebP / AVIF / resized\nversions placed in /dist"]
-
-        STYLES["🎨 **src/styles/**\n« CSS · kebab-case »\nGlobal CSS custom properties\nand base styles\nProcessed by LightningCSS\nat build time — autoprefixed + minified"]
-
-        SCRIPTS["⚡ **src/scripts/**\n« Client-side TS · kebab-case »\nBrowser JavaScript hydrated\nby Astro client directives\nEmbla Carousel for sliders\nLoaded via client:load or client:idle"]
-
-        UI["🧩 **src/components/ui/**\n« PascalCase .astro »\nLow-level design system primitives:\nButton · Card · Badge · Icon wrapper\nVariants managed with CVA\n(class-variance-authority)"]
-
-        STRUCT["🏗️ **src/components/struct/**\n« PascalCase .astro »\nHigher-order structural blocks:\nSection · Grid · Container\nHandle spacing and layout\nwithout business logic"]
-
-        COMPONENTS["🧱 **src/components/**\n« PascalCase .astro »\nFeature-level components:\nHero · Navbar · Footer · CourseCard\nCompose ui/ primitives\nand struct/ layout blocks"]
-
-        LAYOUTS["🖼️ **src/layouts/**\n« PascalCase .astro »\nPage shell templates\nCommon head meta · OpenGraph\nFonts: Onest Variable\nHeader and footer via slots"]
-
-        PAGES["📄 **src/pages/**\n« kebab-case .astro »\nFile-system based routes\nEach file = one URL\n_* files use PascalCase\nfor Astro dynamic segments"]
+    subgraph SRC["Astro Source — src/"]
+        CONTRACTS["contracts/\nShared TS interfaces\nand prop types"]
+        DATA["data/\nStatic content consumed\nat build time"]
+        IMAGES["images/\nSource images optimised\nby Sharp via astro:assets"]
+        STYLES["styles/\nGlobal CSS\nprocessed by LightningCSS"]
+        SCRIPTS["scripts/\nClient-side TS\nhydrated via Astro directives"]
+        UI["components/ui/\nLow-level primitives\nButton · Card · Badge · Icon"]
+        STRUCT["components/struct/\nLayout blocks\nSection · Grid · Container"]
+        COMPONENTS["components/\nFeature components\nHero · Navbar · Footer · CourseCard"]
+        LAYOUTS["layouts/\nPage shells\nhead meta · OG · fonts · slots"]
+        PAGES["pages/\nFile-system routes\nOne file = one URL"]
     end
 
-    CONTRACTS -->|"types shape\ndata files"| DATA
-    CONTRACTS -->|"prop types used\nby components"| COMPONENTS
-    CONTRACTS -->|"prop types used\nby layouts"| LAYOUTS
-    DATA -->|"static content\nread at build"| COMPONENTS
-    DATA -->|"static content\nread at build"| PAGES
-    IMAGES -->|"optimised via\nastro:assets"| COMPONENTS
-    STYLES -->|"global CSS\nimported"| LAYOUTS
-    SCRIPTS -->|"hydrated via\nclient directives"| COMPONENTS
-    UI -->|"composed into\nfeature components"| COMPONENTS
-    STRUCT -->|"layout blocks\nused by"| COMPONENTS
-    STRUCT -->|"layout blocks\nused by"| LAYOUTS
-    COMPONENTS -->|"imported into\npage shells"| LAYOUTS
-    COMPONENTS -->|"imported directly\ninto routes"| PAGES
-    LAYOUTS -->|"wraps pages\nvia slot"| PAGES
+    CONTRACTS -->|"types for data shape"| DATA
+    CONTRACTS -->|"prop types"| COMPONENTS
+    CONTRACTS -->|"prop types"| LAYOUTS
+    DATA -->|"static content at build"| COMPONENTS
+    DATA -->|"static content at build"| PAGES
+    IMAGES -->|"optimised assets"| COMPONENTS
+    STYLES -->|"global CSS"| LAYOUTS
+    SCRIPTS -->|"client directives"| COMPONENTS
+    UI -->|"composed into"| COMPONENTS
+    STRUCT -->|"layout blocks"| COMPONENTS
+    STRUCT -->|"layout blocks"| LAYOUTS
+    COMPONENTS -->|"imported into"| LAYOUTS
+    COMPONENTS -->|"imported into"| PAGES
+    LAYOUTS -->|"wraps via slot"| PAGES
 
     style CONTRACTS fill:#E65100,color:#fff,stroke:#bf360c
     style DATA fill:#33691E,color:#fff,stroke:#1b5e20
