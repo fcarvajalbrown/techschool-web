@@ -1,8 +1,6 @@
 ```mermaid
 flowchart TD
     subgraph SRC["🟦 Astro Source — src/"]
-        direction TD
-
         CONTRACTS["📐 **src/contracts/**\n« TypeScript interfaces »\nShared type definitions\nand prop contracts used\nacross the entire codebase"]
 
         DATA["🗄️ **src/data/**\n« TS data files · kebab-case »\nStatic content consumed at build time\nNo runtime DB needed\nExamples: course lists, team info,\npage copy, navigation config"]

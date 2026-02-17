@@ -3,8 +3,6 @@ flowchart TD
     DEV["👤 **Developer**\nWrites source code,\nruns pnpm scripts, commits"]
 
     subgraph REPO["📦 techschool-web — Monorepo boundary"]
-        direction TD
-
         CFG["⚙️ **Project Config Layer**\n──────────────\nastro.config.mjs · tsconfig.json · .npmrc\n\nastro.config.mjs — registers integrations:\n  sitemap · compressor · astro-icon · seo-schema\n  sets LightningCSS as CSS transformer\n\ntsconfig.json — extends astro/tsconfigs/strict\n  defines 9 path aliases:\n  @components @ui @layouts @scripts\n  @styles @data @contracts @struct @images\n\n.npmrc — pnpm registry and install config"]
 
         TOOL["🔧 **Dev Toolchain**\n──────────────\nESLint · ls-lint · commitlint\nlint-staged · simple-git-hooks\n\npre-commit hook:\n  → lint-staged runs ESLint --fix\n  → ls-lint checks file naming\n\ncommit-msg hook:\n  → commitlint enforces\n    Conventional Commits format\n\nAlso runnable manually:\n  pnpm lint:fix · pnpm prepare"]

@@ -1,45 +1,35 @@
 ```mermaid
 flowchart TD
-    DEV["👤 **Developer**\ngit commit / git push\npnpm dev / pnpm build"]
+    DEV["👤 Developer\ngit commit / pnpm dev / pnpm build"]
 
-    subgraph HOOKS["🪝 Git Hooks — simple-git-hooks"]
-        direction TB
-        PRECOMMIT["**pre-commit**\n① pnpm lint-staged\n② pnpm ls-lint"]
-        COMMITMSG["**commit-msg**\npnpm commitlint -c -e \$1"]
+    subgraph HOOKS["Git Hooks — simple-git-hooks"]
+        PRECOMMIT["pre-commit\nlint-staged + ls-lint"]
+        COMMITMSG["commit-msg\ncommitlint"]
     end
 
-    subgraph LINTERS["🔍 Linting Tools"]
-        direction TB
-
-        ESLINT["📋 **eslint.config.js**\n──────────────\nFlat config chaining:\n· neostandard — base JS/TS rules\n· @stylistic — formatting rules\n· import-x — import ordering\n· perfectionist — sort imports,\n  exports, named imports, JSX props\n  all natural ascending order\n· eslint-plugin-astro\n  Astro file support + a11y\n· astro-eslint-parser\n  parses .astro files\n· typescript-eslint parser\n  parses TS inside .astro\n· eslint-plugin-jsonc\n  validates JSON key casing\n· eslint-plugin-yml\n  YAML indent=3, double quotes\n· eslint-plugin-package-json\n  validates package.json shape"]
-
-        LSLINT["📁 **.ls-lint.yml**\n──────────────\nFile naming enforcement:\n· .js .ts .css .json .yml → kebab-case\n· src/components/**/*.astro → PascalCase\n· src/layouts/**/*.astro   → PascalCase\n· src/pages/**/*.astro     → kebab-case\n· src/pages/_*/*.astro     → PascalCase\n· media and image files    → kebab-case\n\nIgnores: dist/ node_modules/ .git/\nand root-level config files"]
-
-        COMMITLINT["💬 **commitlint.config.js**\n──────────────\nextends @commitlint/config-conventional\n\nEnforces format:\n  type(scope): description\n\nValid types:\n  feat · fix · docs · style\n  refactor · perf · test\n  chore · ci · build"]
+    subgraph LINTERS["Linting Tools"]
+        ESLINT["eslint.config.js\nneostandard · @stylistic · import-x\nperfectionist · astro · jsonc · yml"]
+        LSLINT[".ls-lint.yml\nkebab-case: js/ts/css/media\nPascalCase: components/layouts\nkebab-case: pages"]
+        COMMITLINT["commitlint.config.js\nConventional Commits\ntype(scope): description"]
     end
 
-    subgraph CFGFILES["⚙️ Project Configuration"]
-        direction TB
-
-        PKGJSON["📦 **package.json**\n──────────────\nscripts:\n  dev      → astro dev\n  build    → astro build\n  preview  → astro preview\n  lint:fix → eslint --cache --fix\n  prepare  → simple-git-hooks\n\nlint-staged targets:\n  **/*.{js,mjs,cjs,ts} → lint:fix\n  src/**/*.astro       → lint:fix\n  src/**/*.{jsx,tsx}   → lint:fix\n\nengines:\n  node >=22.14.0\n  pnpm >=10.5.2"]
-
-        ASTROCFG["🚀 **astro.config.mjs**\n──────────────\nIntegrations:\n  astro-sitemap    → /sitemap.xml\n  astro-compressor → gzip + brotli\n  astro-icon       → SVG icon system\n  astro-seo-schema → JSON-LD blocks\n\nvite.css.transformer:\n  lightningcss\n  replaces PostCSS,\n  faster with modern CSS support"]
-
-        TSCFG["🔷 **tsconfig.json**\n──────────────\nextends astro/tsconfigs/strict\nincludes .astro/types.d.ts\n\nPath aliases (baseUrl = .):\n  @components/* → src/components/*\n  @ui/*         → src/components/ui/*\n  @struct/*     → src/components/struct/*\n  @layouts/*    → src/layouts/*\n  @scripts/*    → src/scripts/*\n  @styles/*     → src/styles/*\n  @data/*       → src/data/*\n  @contracts    → src/contracts\n  @images/*     → src/images/*"]
-
-        NPMRC["📄 **.npmrc**\n──────────────\npnpm-specific settings\nregistry config and hoisting rules\nonlyBuiltDependencies:\n  esbuild · sharp\n  simple-git-hooks · unrs-resolver"]
+    subgraph CFGFILES["Project Configuration"]
+        PKGJSON["package.json\nscripts: dev · build · preview · lint:fix\nlint-staged targets · node>=22 · pnpm>=10"]
+        ASTROCFG["astro.config.mjs\nsitemap · compressor · icon · seo-schema\nCSS transformer: lightningcss"]
+        TSCFG["tsconfig.json\nextends astro/strict\n9 path aliases: @components @ui @layouts\n@scripts @styles @data @contracts @images"]
+        NPMRC[".npmrc\npnpm registry + hoisting\nonlyBuiltDependencies: esbuild · sharp"]
     end
 
-    DEV -->|"git commit triggers"| HOOKS
-    PRECOMMIT -->|"runs ESLint --fix\non staged files"| ESLINT
-    PRECOMMIT -->|"validates file\nnaming rules"| LSLINT
-    COMMITMSG -->|"validates commit\nmessage format"| COMMITLINT
-    DEV -->|"pnpm lint:fix\nmanual run"| ESLINT
-    PKGJSON -->|"registers hooks\nvia prepare script"| HOOKS
-    PKGJSON -->|"lint-staged config\npoints to ESLint"| ESLINT
-    ASTROCFG -->|"reads tsconfig for\npath resolution"| TSCFG
-    TSCFG -->|"typescript-eslint\nparser uses tsconfig"| ESLINT
-    NPMRC -->|"controls pnpm install\nbefore deps resolve"| PKGJSON
+    DEV -->|"git commit"| HOOKS
+    DEV -->|"pnpm lint:fix"| ESLINT
+    PKGJSON -->|"prepare script\nregisters hooks"| HOOKS
+    PKGJSON -->|"lint-staged\npoints to"| ESLINT
+    PRECOMMIT --> ESLINT
+    PRECOMMIT --> LSLINT
+    COMMITMSG --> COMMITLINT
+    ASTROCFG -->|"reads for\npath resolution"| TSCFG
+    TSCFG -->|"used by\nts-eslint parser"| ESLINT
+    NPMRC -->|"install config\nbefore deps"| PKGJSON
 
     style DEV fill:#1168BD,color:#fff,stroke:#0e56a0
     style PRECOMMIT fill:#6A1B9A,color:#fff,stroke:#4a148c
